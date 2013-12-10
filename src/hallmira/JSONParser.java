@@ -4,9 +4,17 @@ import java.util.ArrayList;
 
 public class JSONParser {
     // Fields
-
+    /**
+     * index of the next character to process in input
+     */
     int current;
+    /**
+     * string to parse
+     */
     String input;
+    /**
+     * final object, result of parse
+     */
     JSONObject object;
 
     // Constructor
@@ -19,30 +27,54 @@ public class JSONParser {
     // Methods
 
     /**
-     * walks through the string, starting at start remembers the character it
-     * started at and goes until it finds that character's mate if the next
+     * converst the current section of string into an appropriate object value
      * 
-     * @pre current is on a { " or [
-     * @post current is the value directly after the endMate
+     * walks through the string, starting at this.current. remembers the
+     * character it started at and goes until it finds that character's mate
+     * 
+     * @pre current is on a { " or [, or the first character of true, false,
+     *      null or a number
+     * @post current is the value directly after the endMate or the end of true,
+     *       false, null or a number
+     * @returns the appropriate object represented by the current portion of the
+     *          string
+     * @returns if the current character is a {, returns an object containing
+     *          the specified number of pairs
+     * 
+     *          if the current character is a
+     *          ", returns a string containing any characters before the second "
+     * 
+     *          if the current character is a [, returns an array containing a
+     *          combination of objects, strings, booleans, numbers, or null
+     * 
+     *          if the current character is a the beginning of true, false, or
+     *          null returns the appropriate value
+     * 
+     *          if the current character is a digit or a -, returns the number
+     *          in Double form
      */
     public Object parse() {
 	char end = endMate(input.charAt(current));
 
 	switch (end) {
+
 	case '\"': // if its a " , string
 	    StringBuffer strResult = new StringBuffer("");
-	    this.current++;
-	    while (input.charAt(current) != end) {
+	    this.current++; // advance current past the "
+	    while (input.charAt(current) != end) { // add characters
 		strResult.append(input.charAt(current));
 		this.current++;
 	    }// while
-	    this.current++;
+	    this.current++; // advance past the second ""
 	    return new String(strResult);
+
 	case '}': // if its a bracket, go to object
 	    this.current++;
 	    JSONObject objResult = new JSONObject(this);
 	    while (this.input.charAt(current) != end) {
-		while (this.input.charAt(current) == ','
+		while (this.input.charAt(current) == ',' // advance past
+							 // whitespace and
+							 // commas
 			|| this.input.charAt(current) == ' ') {
 		    this.current++;
 		} // while for whitespace
@@ -67,6 +99,7 @@ public class JSONParser {
 	    } // while
 	    this.current++;
 	    return arrayResult;
+
 	case ' ': // if the character wasn't a special character
 	    switch (this.input.charAt(this.current)) {
 	    case 't':
@@ -78,7 +111,7 @@ public class JSONParser {
 	    case 'n':
 		this.current += 4;
 		return null;
-	    default:
+	    default: // anything else must be a number
 		if (Character.isDigit(this.input.charAt(this.current))
 			|| this.input.charAt(this.current) == '-') {
 		    String result = "";
@@ -99,6 +132,13 @@ public class JSONParser {
 	return null;
     }// parse
 
+    /**
+     * finds the appropriate character that will close an opening character's
+     * structure
+     * 
+     * @param beginning
+     * @return a closing
+     */
     private char endMate(char beginning) {
 	switch (beginning) {
 	case '\"':
@@ -112,7 +152,12 @@ public class JSONParser {
 	} // switch
     } // endMate
 
-    public JSONObject get(JSONObject object) {
+    /**
+     * returns the object resulting from a parse of a string
+     * 
+     * @return object
+     */
+    public JSONObject get() {
 	return this.object;
     } // get
 }

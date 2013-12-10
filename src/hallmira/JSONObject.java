@@ -37,6 +37,9 @@ public class JSONObject {
 	this.pairs.add(new JSONPair(parser));
     } // addPair
 
+    /**
+     * renders an object as a string
+     */
     public String toString() {
 	if (this.pairs.equals(new ArrayList<JSONPair>())) {
 	    return "{}";
@@ -49,6 +52,12 @@ public class JSONObject {
 	// remove the last comma and add a }
     } // toString
 
+    /**
+     * a class to contain name/value pairs
+     * 
+     * @author hallmira
+     * 
+     */
     public class JSONPair {
 	// Fields
 	String name;
@@ -60,6 +69,11 @@ public class JSONObject {
 	    this.value = value;
 	}
 
+	/**
+	 * constructs a pair from a specified chunk of input
+	 * 
+	 * @param parser
+	 */
 	public JSONPair(JSONParser parser) {
 	    this.name = (String) parser.parse();
 	    parser.current++; // skip over the ":"
@@ -67,14 +81,27 @@ public class JSONObject {
 	}
 
 	// methods
+	/**
+	 * gets the name part of the pair
+	 * 
+	 * @return name
+	 */
 	public String name() {
 	    return this.name;
 	} // name
 
+	/**
+	 * gets the value part of the pair
+	 * 
+	 * @return value
+	 */
 	public Object value() {
 	    return this.value;
 	} // value
 
+	/**
+	 * renders the pair as a string
+	 */
 	public String toString() {
 	    String value = "";
 	    if (this.value.getClass().equals(String.class)) {
