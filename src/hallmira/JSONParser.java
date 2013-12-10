@@ -13,7 +13,7 @@ public class JSONParser {
     public JSONParser(String input) {
 	current = 0;
 	this.input = input;
-	this.object = new JSONObject(this);
+	this.object = (JSONObject) this.parse();
     }
 
     // Methods
@@ -34,6 +34,7 @@ public class JSONParser {
 	    this.current++;
 	    while (input.charAt(current) != end) {
 		strResult.append(input.charAt(current));
+		this.current++;
 	    }// while
 	    this.current++;
 	    return new String(strResult);
@@ -41,19 +42,60 @@ public class JSONParser {
 	    this.current++;
 	    JSONObject objResult = new JSONObject(this);
 	    while (this.input.charAt(current) != end) {
+		while (this.input.charAt(current) == ','
+			|| this.input.charAt(current) == ' ') {
+		    this.current++;
+		} // while for whitespace
 		objResult.addPair(this);
 	    } // while
+	    this.current++;
 	    return objResult;
 
 	case ']': // if its a [ go to array
 	    this.current++;
-	    ArrayList<JSONObject> arrayResult = new ArrayList<JSONObject>();
+	    ArrayList<Object> arrayResult = new ArrayList<Object>();
 	    while (this.input.charAt(current) != end) {
-		arrayResult.add((JSONObject) parse());
+		while (this.input.charAt(current) == ','
+			|| this.input.charAt(current) == ' ') {
+		    this.current++;
+		} // while for whitespace
+		if (this.input.charAt(current) == '\"') {
+		    arrayResult.add((String) parse());
+		} else {
+		    arrayResult.add((Object) parse());
+		}
 	    } // while
 	    this.current++;
 	    return arrayResult;
-	} // switch
+	case ' ': // if the character wasn't a special character
+	    switch (this.input.charAt(this.current)) {
+	    case 't':
+		this.current += 4;
+		return true;
+	    case 'f':
+		this.current += 5;
+		return false;
+	    case 'n':
+		this.current += 4;
+		return null;
+	    default:
+		if (Character.isDigit(this.input.charAt(this.current))
+			|| this.input.charAt(this.current) == '-') {
+		    String result = "";
+		    while (Character.isDigit(this.input.charAt(this.current))
+			    || this.input.charAt(this.current) == '.'
+			    || this.input.charAt(this.current) == '-') {
+			result = result + this.input.charAt(this.current);
+			this.current++;
+		    }// while
+		    return new Double(result);
+		} else {
+		    System.out.println("Error: incorrect input: "
+			    + this.input.charAt(this.current));
+		    this.current++;
+		}
+	    } // switch
+	}// switch
 	return null;
     }// parse
 
