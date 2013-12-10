@@ -1,6 +1,8 @@
 package hallmira;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+
 import hallmira.JSONParser;
 
 /**
@@ -36,7 +38,13 @@ public class JSONObject {
     public void addPair(JSONParser parser) {
 	this.pairs.add(new JSONPair(parser));
     } // addPair
-
+    
+    /*
+     * returns the contents of the object
+     */
+    public ArrayList<JSONPair> getPairs() {
+	return this.pairs;
+    }
     /**
      * renders an object as a string
      */
@@ -115,4 +123,5 @@ public class JSONObject {
 	} // toString
 
     }// JSONPair
+
 } // JSONObject

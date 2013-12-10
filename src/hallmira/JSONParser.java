@@ -32,9 +32,19 @@ public class JSONParser {
 	case '\"': // if its a " , string
 	    StringBuffer strResult = new StringBuffer("");
 	    this.current++;
-	    while (input.charAt(current) != end) {
-		strResult.append(input.charAt(current));
-		this.current++;
+	    while (this.input.charAt(current) != end) {
+		if (this.input.charAt(current) == '\\') {
+		    if (this.input.charAt(current + 1) == '\"') {
+			strResult.append("\\\"");
+			this.current += 2;
+		    } else {
+			strResult.append(input.charAt(current));
+			    this.current++;
+		    }//if/else
+		} else {
+		    strResult.append(input.charAt(current));
+		    this.current++;
+		} // if/else
 	    }// while
 	    this.current++;
 	    return new String(strResult);
