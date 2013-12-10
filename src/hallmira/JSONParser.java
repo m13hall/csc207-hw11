@@ -39,8 +39,8 @@ public class JSONParser {
 			this.current += 2;
 		    } else {
 			strResult.append(input.charAt(current));
-			    this.current++;
-		    }//if/else
+			this.current++;
+		    } // if/else
 		} else {
 		    strResult.append(input.charAt(current));
 		    this.current++;

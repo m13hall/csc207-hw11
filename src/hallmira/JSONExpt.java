@@ -28,7 +28,7 @@ public class JSONExpt {
 	String resultTrim = result.replaceAll("\\s+", "");
 	String inputTrim = input.replaceAll("\\s+", "");
 	pen.println(resultTrim.equals(inputTrim));
-	
+
 	for (int i = 0; i < result.length() && i < input.length(); i++) {
 	    if (result.charAt(i) != input.charAt(i)) {
 		pen.println("differ at: " + i);
